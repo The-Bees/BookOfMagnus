@@ -1,6 +1,34 @@
 from django.db import models
 
+
+class Affiliation(models.Model):
+
+    name = models.TextField(unique=True)
+    legion = models.BooleanField()
+
+
+class Character(models.Model):
+
+    # Types
+    EMPEROR = "EMPEROR"
+    SIGILLITE = "SIGILLITE"
+    PRIMARCH = "PRIMARCH"
+    ASTARTES = "ASTARTES"
+
+    TYPE_CHOICES = (
+        (EMPEROR, "The Emperor"),
+        (SIGILLITE, "The Sigillite"),
+        (PRIMARCH, "Primarch"),
+        (ASTARTES, "Astartes")
+    )
+
+    name = models.TextField(unique=True)
+    type = models.CharField(choices=TYPE_CHOICES, max_length=20)
+    affiliation = models.ManyToManyField(to=Affiliation)
+
+
 # Create your models here.
 class Book(models.Model):
     title = models.TextField(unique=True)
     follows = models.ManyToManyField(to='Book')
+    characters = models.ManyToManyField(to=Character)

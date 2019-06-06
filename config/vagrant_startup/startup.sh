@@ -7,7 +7,12 @@ sudo ln -s /vagrant/src/ /home/vagrant/src
 sudo apt-get update
 # install python-pip
 sudo apt-get install --upgrade -y \
-    python-pip
+    python3 \
+    python3-dev \
+    python-pip \
+    graphviz \
+    libgraphviz-dev \
+    pkg-config
 
 # pip install virtualenv
 sudo pip install virtualenv

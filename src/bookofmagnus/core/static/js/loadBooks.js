@@ -46,15 +46,39 @@ var root = d3.hierarchy(data)
 treeLayout(root)
 
 // Nodes
-d3.select('svg g.nodes')
-  .selectAll('circle.node')
+var nodes = d3.select('svg g.nodes')
+  .selectAll('.node')
   .data(root.descendants())
-  .enter()
-  .append('circle')
-  .classed('node', true)
+  .enter();
+
+nodes.append('circle')
+    .classed('node', true)
   .attr('cx', function(d) {return d.x;})
   .attr('cy', function(d) {return d.y;})
   .attr('r', 4);
+
+// Text
+nodes.append("text")
+      .attr("dy", ".35em")
+  .attr("x", function(d) { return d.x; })
+  .attr("y", function(d) { return d.y; })
+//      .attr("y", function(d) { return d.children ? -20 : 20; })
+      .style("text-anchor", "middle")
+      .text(function(d) { return d.data.name; });
+
+//var text = d3.select('svg g.nodes')
+//  .selectAll('text.node')
+//  .data(root.descendants())
+//  .enter()
+//  .append('text');
+//
+//var textAttrs = text.attr("dy", ".35em")
+//  .attr("text-anchor", "middle")
+//  .attr("x", function(d) { return d.x; })
+//  .attr("y", function(d) { return d.y; })
+////  .attr("y", function(d) {
+////          return d.data.children || d.data._children ? -18 : 18; })
+//  .text(function(d) { return d.data.name; });
 
 // Links
 d3.select('svg g.links')

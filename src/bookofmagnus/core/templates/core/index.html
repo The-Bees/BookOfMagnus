@@ -7,25 +7,19 @@
     <meta charset="UTF-8">
     <title>Book of Magnus</title>
 
+
+    <link rel="stylesheet" type="text/css" href="{% static "/css/tree.css" %}">
     <script src="https://d3js.org/d3.v5.min.js"></script>
 
 
     <style>
-.node {
-  fill: steelblue;
-  stroke: none;
-}
 
-.link {
-  fill: none;
-  stroke: #ccc;
-  stroke-width: 1px;
-}
+
 </style>
 </head>
 <body>
 <p>Hello, world. Books Page.</p>
-<svg width="400" height="220">
+<svg width="1000" height="1000">
     <g transform="translate(5, 5)">
       <g class="links"></g>
       <g class="nodes"></g>

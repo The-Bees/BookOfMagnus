@@ -1,4 +1,4 @@
-var data = {
+var treeData = {
     "name": "Horus Rising",
     "children": [
         {
@@ -37,122 +37,61 @@ var data = {
 
 }
 
+// set the dimensions and margins of the diagram
+var margin = {top: 40, right: 90, bottom: 50, left: 90},
+    width = 660 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
-var treeLayout = d3.tree()
-  .size([400, 200])
+// declares a tree layout and assigns the size
+var treemap = d3.tree()
+    .size([width, height]);
 
-var root = d3.hierarchy(data)
+//  assigns the data to a hierarchy using parent-child relationships
+var nodes = d3.hierarchy(treeData);
 
-treeLayout(root)
+// maps the node data to the tree layout
+nodes = treemap(nodes);
 
-// Nodes
-var nodes = d3.select('svg g.nodes')
-  .selectAll('.node')
-  .data(root.descendants())
-  .enter();
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("body").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom),
+    g = svg.append("g")
+      .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
 
-nodes.append('circle')
-    .classed('node', true)
-  .attr('cx', function(d) {return d.x;})
-  .attr('cy', function(d) {return d.y;})
-  .attr('r', 4);
+// adds the links between the nodes
+var link = g.selectAll(".link")
+    .data( nodes.descendants().slice(1))
+  .enter().append("path")
+    .attr("class", "link")
+    .attr("d", function(d) {
+       return "M" + d.x + "," + d.y
+         + "C" + d.x + "," + (d.y + d.parent.y) / 2
+         + " " + d.parent.x + "," +  (d.y + d.parent.y) / 2
+         + " " + d.parent.x + "," + d.parent.y;
+       });
 
-// Text
-nodes.append("text")
-      .attr("dy", ".35em")
-  .attr("x", function(d) { return d.x; })
-  .attr("y", function(d) { return d.y; })
-//      .attr("y", function(d) { return d.children ? -20 : 20; })
-      .style("text-anchor", "middle")
-      .text(function(d) { return d.data.name; });
+// adds each node as a group
+var node = g.selectAll(".node")
+    .data(nodes.descendants())
+  .enter().append("g")
+    .attr("class", function(d) {
+      return "node" +
+        (d.children ? " node--internal" : " node--leaf"); })
+    .attr("transform", function(d) {
+      return "translate(" + d.x + "," + d.y + ")"; });
 
-//var text = d3.select('svg g.nodes')
-//  .selectAll('text.node')
-//  .data(root.descendants())
-//  .enter()
-//  .append('text');
-//
-//var textAttrs = text.attr("dy", ".35em")
-//  .attr("text-anchor", "middle")
-//  .attr("x", function(d) { return d.x; })
-//  .attr("y", function(d) { return d.y; })
-////  .attr("y", function(d) {
-////          return d.data.children || d.data._children ? -18 : 18; })
-//  .text(function(d) { return d.data.name; });
+// adds the circle to the node
+node.append("circle")
+.classed('node', true)
+  .attr("r", 10);
 
-// Links
-d3.select('svg g.links')
-  .selectAll('line.link')
-  .data(root.links())
-  .enter()
-  .append('line')
-  .classed('link', true)
-  .attr('x1', function(d) {return d.source.x;})
-  .attr('y1', function(d) {return d.source.y;})
-  .attr('x2', function(d) {return d.target.x;})
-  .attr('y2', function(d) {return d.target.y;});
-
-//
-//var margin = {top: 40, right: 120, bottom: 20, left: 120},
-//    width = 960 - margin.right - margin.left,
-//    height = 500 - margin.top - margin.bottom;
-//
-//var i = 0;
-//
-//var tree = d3.layout.tree()
-//    .size([height, width]);
-//
-//var diagonal = d3.svg.diagonal()
-//    .projection(function(d) { return [d.x, d.y]; });
-//
-//var svg = d3.select("body").append("svg")
-//    .attr("width", width + margin.right + margin.left)
-//    .attr("height", height + margin.top + margin.bottom)
-//  .append("g")
-//    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-//
-//root = treeData[0];
-//
-//update(root);
-//
-//function update(source) {
-//
-//  // Compute the new tree layout.
-//  var nodes = tree.nodes(root).reverse(),
-//      links = tree.links(nodes);
-//
-//  // Normalize for fixed-depth.
-//  nodes.forEach(function(d) { d.y = d.depth * 100; });
-//
-//  // Declare the nodes…
-//  var node = svg.selectAll("g.node")
-//      .data(nodes, function(d) { return d.id || (d.id = ++i); });
-//
-//  // Enter the nodes.
-//  var nodeEnter = node.enter().append("g")
-//      .attr("class", "node")
-//      .attr("transform", function(d) {
-//          return "translate(" + d.x + "," + d.y + ")"; });
-//
-//  nodeEnter.append("circle")
-//      .attr("r", 10)
-//      .style("fill", "#fff");
-//
-//  nodeEnter.append("text")
-//      .attr("y", function(d) {
-//          return d.children || d._children ? -18 : 18; })
-//      .attr("dy", ".35em")
-//      .attr("text-anchor", "middle")
-//      .text(function(d) { return d.name; })
-//      .style("fill-opacity", 1);
-//
-//  // Declare the links…
-//  var link = svg.selectAll("path.link")
-//      .data(links, function(d) { return d.target.id; });
-//
-//  // Enter the links.
-//  link.enter().insert("path", "g")
-//      .attr("class", "link")
-//      .attr("d", diagonal);
-//
-//}
+// adds the text to the node
+node.append("text")
+  .attr("dy", ".35em")
+  .attr("y", function(d) { return d.children ? -20 : 20; })
+  .style("text-anchor", "middle")
+  .text(function(d) { return d.data.name; });

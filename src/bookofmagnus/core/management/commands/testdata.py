@@ -1,5 +1,8 @@
+import pandas
+import xlrd
+
 from django.core.management.base import BaseCommand, CommandError
-from core.models import Book
+from core.models import Book, Affiliation, Character
 
 test_data = [
     {"title": "Horus Rising", "follows": []},
@@ -12,6 +15,27 @@ test_data = [
     {"title": "Fulgrim", "follows": ["Flight of the Eisenstein"]}
 ]
 
+legions = [
+    "Sons of Horus",
+    "Imperial Fists",
+    "Blood Angels",
+    "World Eaters",
+    "Emperor's Children",
+    "Death Guard",
+    "Iron Hands",
+    "Salamanders",
+    "Raven Guard",
+    "Dark Angels",
+    "Alpha Legion",
+    "Thousand Sons",
+    "Space Wolves",
+    "Word Bearers",
+    "Ultramarines",
+    "Night Lords",
+    "Iron Warriors",
+    "White Scars",
+]
+
 
 class Command(BaseCommand):
     help = 'Adds test data to the db'
@@ -21,10 +45,45 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         Book.objects.all().delete()
-        for data in test_data:
+        Affiliation.objects.all().delete()
+        Character.objects.all().delete()
+
+
+        # Add the books
+
+        books_df = pandas.read_excel('books.xlsx')
+
+        for index, row in books_df.iterrows():
+
             book = Book.objects.create(
-                title=data["title"]
+                title=row['Title'],
+                type=row['Format'].upper()
             )
-            if data["follows"]:
-                for parent in data["follows"]:
-                    book.follows.add(Book.objects.get(title=parent))
+
+        # Create the legions
+        for legion in legions:
+
+            Affiliation.objects.create(
+                name=legion,
+                legion=True
+            )
+
+        characters_df = pandas.read_excel('characters.xlsx')
+
+        # Add the characters
+        for index, row in characters_df.iterrows():
+
+            print(row["Type"], row["Name"])
+
+            if row["Type"]:
+                affiliation, created = Affiliation.objects.get_or_create(name=row["Affiliation"])
+
+                character = Character.objects.create(
+                    name=row["Name"],
+                    type=row["Type"].upper(),
+
+                )
+
+                character.affiliation.add(affiliation.id)
+
+

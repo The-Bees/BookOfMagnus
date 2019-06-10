@@ -60,6 +60,13 @@ class Command(BaseCommand):
                 type=row['Format'].upper()
             )
 
+            # Add and books they follow on from
+            if type(row['Follows']) == str:
+                follows_list = row['Follows'].split(",")
+
+                for fbook in follows_list:
+                    book.follows.add(Book.objects.get(title=fbook).id)
+
         # Create the legions
         for legion in legions:
 
@@ -73,8 +80,6 @@ class Command(BaseCommand):
         # Add the characters
         for index, row in characters_df.iterrows():
 
-            print(row["Type"], row["Name"])
-
             if row["Type"]:
                 affiliation, created = Affiliation.objects.get_or_create(name=row["Affiliation"])
 
@@ -85,5 +90,19 @@ class Command(BaseCommand):
                 )
 
                 character.affiliation.add(affiliation.id)
+
+                # Add them to any books they're in
+                if type(row['Books']) == str:
+                    books_list = row['Books'].split(",")
+                    print(books_list)
+
+                    for title in books_list:
+                        print(title)
+                        try:
+                            book_obj = Book.objects.get(title=title)
+                            book_obj.characters.add(character.id)
+                        except:
+                            # If book doesn't exist
+                            pass
 
 

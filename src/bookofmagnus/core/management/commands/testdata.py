@@ -4,38 +4,6 @@ import xlrd
 from django.core.management.base import BaseCommand, CommandError
 from core.models import Book, Affiliation, Character
 
-test_data = [
-    {"title": "Horus Rising", "follows": []},
-    {"title": "False Gods", "follows": ["Horus Rising"]},
-    {"title": "Galaxy In Flames", "follows": ["False Gods"]},
-    {"title": "Flight of the Eisenstein", "follows": ["Galaxy In Flames"]},
-    {"title": "After Desh'ea", "follows": ["Galaxy In Flames"]},
-    {"title": "Mechanicum", "follows": ["Galaxy In Flames"]},
-    {"title": "The Last Church", "follows": ["Flight of the Eisenstein"]},
-    {"title": "Fulgrim", "follows": ["Flight of the Eisenstein"]}
-]
-
-legions = [
-    "Sons of Horus",
-    "Imperial Fists",
-    "Blood Angels",
-    "World Eaters",
-    "Emperor's Children",
-    "Death Guard",
-    "Iron Hands",
-    "Salamanders",
-    "Raven Guard",
-    "Dark Angels",
-    "Alpha Legion",
-    "Thousand Sons",
-    "Space Wolves",
-    "Word Bearers",
-    "Ultramarines",
-    "Night Lords",
-    "Iron Warriors",
-    "White Scars",
-]
-
 
 class Command(BaseCommand):
     help = 'Adds test data to the db'
@@ -67,20 +35,13 @@ class Command(BaseCommand):
                 for fbook in follows_list:
                     book.follows.add(Book.objects.get(title=fbook).id)
 
-        # Create the legions
-        for legion in legions:
-
-            Affiliation.objects.create(
-                name=legion,
-                legion=True
-            )
-
         characters_df = pandas.read_excel('characters.xlsx')
 
         # Add the characters
         for index, row in characters_df.iterrows():
 
-            if row["Type"]:
+            if row["Type"] and type(row["Name"]) == str:
+                print("Adding character: {}".format(row["Name"]))
                 affiliation, created = Affiliation.objects.get_or_create(name=row["Affiliation"])
 
                 character = Character.objects.create(
@@ -97,7 +58,7 @@ class Command(BaseCommand):
                     print(books_list)
 
                     for title in books_list:
-                        print(title)
+
                         try:
                             book_obj = Book.objects.get(title=title)
                             book_obj.characters.add(character.id)

@@ -19,7 +19,20 @@
 </head>
 <body>
 <p>Hello, world. Books Page.</p>
+<form method="post">
+    {% csrf_token %}
+    <input name="character" list="characters">
+    <datalist id="characters">
+        {% for character in characters %}
+        <option value="{{ character.name }}">
+        {% endfor %}
+    </datalist>
+    <input type="submit">
+</form>
+
+
 {{ svg |safe }}
+
 </body>
 
 <!--<script src="{% static "/js/loadBooks.js" %}"></script>-->

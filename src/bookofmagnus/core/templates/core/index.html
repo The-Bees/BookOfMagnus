@@ -19,12 +19,23 @@
 </head>
 <body>
 <p>Hello, world. Books Page.</p>
+<button onclick="window.location.href='/'">Reset</button>
 <form method="post">
     {% csrf_token %}
+
+    <!-- CHARACTER -->
     <input name="character" list="characters">
     <datalist id="characters">
         {% for character in characters %}
         <option value="{{ character.name }}">
+        {% endfor %}
+    </datalist>
+
+    <!-- AFFILIATION -->
+    <input name="affiliation" list="affiliations">
+    <datalist id="affiliations">
+        {% for affiliation in affiliations %}
+        <option value="{{ affiliation.name }}">
         {% endfor %}
     </datalist>
     <input type="submit">
@@ -32,6 +43,10 @@
 
 
 {{ svg |safe }}
+
+<script>
+
+</script>
 
 </body>
 </html>

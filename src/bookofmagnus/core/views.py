@@ -2,21 +2,26 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from pygraphviz import *
 
-from core.models import Book, Character
+from core.models import Affiliation, Book, Character
 
 # Create your views here.
 
 def index(request):
 
     characters = Character.objects.all()
+    affiliations = Affiliation.objects.all()
 
     graph = AGraph(directed=True)
 
     if request.method == "POST":
         character = request.POST.get("character")
-        # FIXME: CHaracter is none or we want all charcters again
+        affiliation = request.POST.get("affiliation")
 
-        books = Book.objects.filter(characters__name=character)
+        if character:
+            books = Book.objects.filter(characters__name=character)
+        if affiliation:
+            affiliation_obj = Affiliation.objects.get(name=affiliation)
+            books = Book.objects.filter(characters__affiliation__in=[affiliation_obj])
 
         # Get the books they follow on from
         prequels = get_prequels(books)
@@ -56,7 +61,8 @@ def index(request):
 
     context = {
         "svg": svg_graph,
-        "characters": characters
+        "characters": characters,
+        "affiliations": affiliations
 
     }
 

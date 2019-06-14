@@ -69,23 +69,20 @@ def get_prequels(books):
     Get all prequels recursively for a queryset of books
     """
 
-    def _get_prequels(books):
+    prequels = Book.objects.none()
 
-        prequels = Book.objects.none()
-        for book in books:
+    for book in books:
 
-            if book.follows.exists():
+        if book.follows.exists():
 
-                book_follows = book.follows.all()
+            book_follows = book.follows.all()
 
-                # Add them to the prequels queryset
-                prequels |= book_follows
+            # Add them to the prequels queryset
+            prequels |= book_follows
 
-                # See if they have any prequels
-                prequels |= _get_prequels(book_follows)
-
-        return prequels
-
-    prequels = _get_prequels(books)
+            # See if they have any prequels
+            prequels |= get_prequels(book_follows)
 
     return prequels
+
+

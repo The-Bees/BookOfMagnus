@@ -1,1 +1,1 @@
-web: gunicorn bookofmagnus.wsgi --log-file -
+web: gunicorn src.bookofmagnus.bookofmagnus.wsgi --log-file -

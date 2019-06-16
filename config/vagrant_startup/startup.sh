@@ -12,7 +12,8 @@ sudo apt-get install --upgrade -y \
     python-pip \
     graphviz \
     libgraphviz-dev \
-    pkg-config
+    pkg-config \
+    libpq-dev
 
 # pip install virtualenv
 sudo pip install virtualenv

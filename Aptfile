@@ -1,3 +1,6 @@
+:repo:deb http://archive.ubuntu.com/ubuntu bionic  universe
+:repo:deb http://archive.ubuntu.com/ubuntu bionic -updates universe
+
 #python3
 #python3-dev
 #python-pip

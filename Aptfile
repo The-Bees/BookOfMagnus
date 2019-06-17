@@ -1,10 +1,9 @@
-:repo:deb http://security.ubuntu.com/ubuntu lucid-security main
-:repo:deb http://cz.archive.ubuntu.com/ubuntu lucid main
+https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/graphviz_2.40.1-2_amd64.deb
 
 #python3
 #python3-dev
 #python-pip
-graphviz
-libgraphviz-dev
+#graphviz
+#libgraphviz-dev
 #pkg-config
 #libpq-dev

@@ -1,7 +1,7 @@
-python3
-python3-dev
-python-pip
+#python3
+#python3-dev
+#python-pip
 graphviz
 libgraphviz-dev
-pkg-config
-libpq-dev
+#pkg-config
+#libpq-dev

@@ -1,10 +1,12 @@
-
-
-circle.node {
-  fill: #fff;
-  stroke: steelblue;
-  stroke-width: 3px;
+body {
+  background-image: url("/static/images/ancient-antique-art-235985.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: 100%
 }
+
+
 
 text.node {
   font: 12px sans-serif;

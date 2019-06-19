@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.shortcuts import render
 from django.http import HttpResponse
 from pygraphviz import *
@@ -12,7 +13,7 @@ def index(request):
     characters = Character.objects.all()
     affiliations = Affiliation.objects.all()
 
-    graph = AGraph(directed=True)
+    graph = AGraph(directed=True, bgcolor="transparent")
 
     if request.method == "POST":
         character = request.POST.get("character")
@@ -32,14 +33,14 @@ def index(request):
 
         # Draw all the nodes
         for book in books:
-            graph.add_node(book.id, label=book.title)
+            graph.add_node(book.id, label=book.title, fillcolor="beige:tan")
 
             if book.follows.exists():
                 for parent in book.follows.all():
                     graph.add_edge(parent.id, book.id)
 
         for book in prequels:
-            graph.add_node(book.id, label=book.title, shape="box", color="red")
+            graph.add_node(book.id, label=book.title, fillcolor="grey87:grey56")
 
             if book.follows.exists():
                 for parent in book.follows.all():
@@ -50,12 +51,16 @@ def index(request):
         books = Book.objects.all()
 
         for book in books:
-            graph.add_node(book.id, label=book.title)
+            graph.add_node(book.id, label=book.title, fillcolor="beige:tan")
 
             if book.follows.exists():
                 for parent in book.follows.all():
                     graph.add_edge(parent.id, book.id)
 
+    #graph.graph_attr["splines"] = "curved"
+    graph.edge_attr["arrowhead"] = "open"
+    graph.node_attr["shape"] = "box"
+    graph.node_attr["style"] = "rounded,radial"
     graph.layout(prog='dot')
     #print(graph.string())
     svg_graph = graph.draw(format="svg")

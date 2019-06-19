@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Link vagrant src code to user
-sudo ln -s /vagrant/src/ /home/vagrant/src
+sudo ln -s /vagrant/ /home/vagrant/src
 
 # apt-get update
 sudo apt-get update

@@ -21,7 +21,7 @@ def index(request):
 
         if character:
             books = Book.objects.filter(characters__name=character)
-        if affiliation:
+        elif affiliation:
             affiliation_obj = Affiliation.objects.get(name=affiliation)
             books = Book.objects.filter(characters__affiliation__in=[affiliation_obj])
         else:

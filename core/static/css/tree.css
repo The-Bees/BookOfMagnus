@@ -1,19 +1,15 @@
 body {
   background-image: url("/static/images/ancient-antique-art-235985.jpg");
-  background-repeat: no-repeat;
   background-attachment: fixed;
-  background-position: center;
-  background-size: 100%
+  background-position: left top;
+  background-size: cover;
 }
 
 
 
-text.node {
-  font: 12px sans-serif;
+.text-box {
+    background: #f4ebd7;
 }
 
-.link {
-  fill: none;
-  stroke: #ccc;
-  stroke-width: 2px;
-}
+
+

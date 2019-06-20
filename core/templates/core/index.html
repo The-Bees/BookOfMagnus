@@ -16,31 +16,67 @@
 </head>
 <body>
 <div class="container-fluid">
-    <p>Hello, world. Books Page.</p>
-    <button onclick="window.location.href='/'">Reset</button>
-    <form method="post">
-        {% csrf_token %}
-
-        <!-- CHARACTER -->
-        <input name="character" list="characters">
-        <datalist id="characters">
-            {% for character in characters %}
-            <option value="{{ character.name }}">
-            {% endfor %}
-        </datalist>
-
-        <!-- AFFILIATION -->
-        <input name="affiliation" list="affiliations">
-        <datalist id="affiliations">
-            {% for affiliation in affiliations %}
-            <option value="{{ affiliation.name }}">
-            {% endfor %}
-        </datalist>
-        <input type="submit">
-    </form>
 
 
-    {{ svg |safe }}
+    <div class="row-fluid">
+        <div class="span4">
+            <div class="card text-box rounded m-4">
+                <div class="card-header">
+                    <h1>Horus Heresy Reading Order</h1>
+                </div>
+                <div class="card-body">
+                    <h5 class=""card-title>Refine by:</h5>
+
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" onchange="searchCharacters(this)" id="character-radio" name="refine" checked>
+                            <label class="form-check-label" for="character-radio">
+                                Character
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" onchange="searchAffiliation(this)" id="affiliation-radio" name="refine">
+                            <label class="form-check-label" for="affiliation-radio">
+                                Affiliation
+                            </label>
+                        </div>
+
+                        <!-- CHARACTER -->
+                        <div id="characterInput" class="form-group">
+                            <input name="character" list="characters" class="form-control col-md-4">
+                            <datalist id="characters">
+                                {% for character in characters %}
+                                <option value="{{ character.name }}">
+                                {% endfor %}
+                            </datalist>
+                        </div>
+
+                        <!-- AFFILIATION -->
+                        <div id="affiliationInput" class="form-group" style="display: none;">
+                            <input name="affiliation" list="affiliations" class="form-control col-md-4">
+                            <datalist id="affiliations">
+                                {% for affiliation in affiliations %}
+                                <option value="{{ affiliation.name }}">
+                                {% endfor %}
+                            </datalist>
+                        </div>
+
+                        <input type="submit" class="btn btn-light">
+                        <button class="btn btn-light" onclick="window.location.href='/'">Reset</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span12">
+            {{ svg |safe }}
+        </div>
+    </div>
 </div>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -48,6 +84,20 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
+<script>
+    function searchCharacters(x){
+        if(x.checked){
+            $("#characterInput").show();
+            $("#affiliationInput").hide();
+        }
+    }
+    function searchAffiliation(x){
+        if(x.checked){
+            $("#affiliationInput").show();
+            $("#characterInput").hide();
+        }
+    }
+</script>
 </body>
 </html>
 

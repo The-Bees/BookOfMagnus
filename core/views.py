@@ -24,6 +24,8 @@ def index(request):
         if affiliation:
             affiliation_obj = Affiliation.objects.get(name=affiliation)
             books = Book.objects.filter(characters__affiliation__in=[affiliation_obj])
+        else:
+            books = Book.objects.all()
 
         # Get the books they follow on from
         prequels = get_prequels(books)
@@ -63,7 +65,7 @@ def index(request):
     graph.node_attr["style"] = "rounded,radial"
     graph.layout(prog='dot')
     #print(graph.string())
-    svg_graph = graph.draw(format="svg")
+    svg_graph = graph.draw(format="svg").decode("utf-8")
 
     context = {
         "svg": svg_graph,

@@ -35,14 +35,14 @@ def index(request):
 
         # Draw all the nodes
         for book in books:
-            graph.add_node(book.id, label=book.title, fillcolor="beige:tan")
+            graph.add_node(book.id, id="main-book-{}".format(book.id), label=book.title)
 
             if book.follows.exists():
                 for parent in book.follows.all():
                     graph.add_edge(parent.id, book.id)
 
         for book in prequels:
-            graph.add_node(book.id, label=book.title, fillcolor="grey87:grey56")
+            graph.add_node(book.id, id="recommended-book-{}".format(book.id), label=book.title)
 
             if book.follows.exists():
                 for parent in book.follows.all():
@@ -53,7 +53,7 @@ def index(request):
         books = Book.objects.all()
 
         for book in books:
-            graph.add_node(book.id, id=book.id, label=book.title, color="lightgrey")
+            graph.add_node(book.id, id="main-book-{}".format(book.id), label=book.title)
 
             if book.follows.exists():
                 for parent in book.follows.all():
@@ -62,7 +62,6 @@ def index(request):
     #graph.graph_attr["splines"] = "curved"
     graph.edge_attr["arrowhead"] = "open"
     graph.node_attr["shape"] = "box"
-    graph.node_attr["style"] = "filled"
     graph.layout(prog='dot')
     #print(graph.string())
     svg_graph = graph.draw(format="svg").decode("utf-8")
@@ -72,7 +71,6 @@ def index(request):
         "characters": characters,
         "affiliations": affiliations
     }
-
 
     return render(request, 'core/index.html', context)
 

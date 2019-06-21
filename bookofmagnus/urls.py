@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.contrib.auth.views import LoginView
 from django.urls import path
 
+from core.apis import book
 from core.views import index
 
 urlpatterns = [
@@ -25,5 +26,9 @@ urlpatterns = [
     # Temporary login
     path('accounts/login/', LoginView.as_view()),
 
+    # Views
     path('', index),
+
+    # APIs
+    path('book/<int:book_id>/', book)
 ]

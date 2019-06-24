@@ -19,56 +19,50 @@
 
 
     <div class="row-fluid">
-        <div class="span4">
-            <div class="card text-box rounded m-4">
-                <div class="card-header">
-                    <h1>Horus Heresy Reading Order</h1>
+        <div class="span4 m-3">
+            <h1>Horus Heresy Reading Order</h1>
+
+            <h5>Refine by:</h5>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" onchange="searchCharacters(this)" id="character-radio" name="refine" checked>
+                    <label class="form-check-label" for="character-radio">
+                        Character
+                    </label>
                 </div>
-                <div class="card-body">
-                    <h5 class=""card-title>Refine by:</h5>
-
-
-                    <form method="post">
-                        {% csrf_token %}
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" onchange="searchCharacters(this)" id="character-radio" name="refine" checked>
-                            <label class="form-check-label" for="character-radio">
-                                Character
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" onchange="searchAffiliation(this)" id="affiliation-radio" name="refine">
-                            <label class="form-check-label" for="affiliation-radio">
-                                Affiliation
-                            </label>
-                        </div>
-
-                        <!-- CHARACTER -->
-                        <div id="characterInput" class="form-group">
-                            <input name="character" list="characters" class="form-control col-md-4">
-                            <datalist id="characters">
-                                {% for character in characters %}
-                                <option value="{{ character.name }}">
-                                {% endfor %}
-                            </datalist>
-                        </div>
-
-                        <!-- AFFILIATION -->
-                        <div id="affiliationInput" class="form-group" style="display: none;">
-                            <input name="affiliation" list="affiliations" class="form-control col-md-4">
-                            <datalist id="affiliations">
-                                {% for affiliation in affiliations %}
-                                <option value="{{ affiliation.name }}">
-                                {% endfor %}
-                            </datalist>
-                        </div>
-
-                        <input type="submit" class="btn btn-light">
-                        <button class="btn btn-light" onclick="window.location.href='/'">Reset</button>
-                    </form>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" onchange="searchAffiliation(this)" id="affiliation-radio" name="refine">
+                    <label class="form-check-label" for="affiliation-radio">
+                        Affiliation
+                    </label>
                 </div>
-            </div>
+
+                <!-- CHARACTER -->
+                <div id="characterInput" class="form-group">
+                    <input name="character" list="characters" class="form-control col-md-4">
+                    <datalist id="characters">
+                        {% for character in characters %}
+                        <option value="{{ character.name }}">
+                        {% endfor %}
+                    </datalist>
+                </div>
+
+                <!-- AFFILIATION -->
+                <div id="affiliationInput" class="form-group" style="display: none;">
+                    <input name="affiliation" list="affiliations" class="form-control col-md-4">
+                    <datalist id="affiliations">
+                        {% for affiliation in affiliations %}
+                        <option value="{{ affiliation.name }}">
+                        {% endfor %}
+                    </datalist>
+                </div>
+
+                <input type="submit" class="btn btn-dark">
+                <button class="btn btn-secondary" onclick="window.location.href='/'">Reset</button>
+            </form>
         </div>
     </div>
 
@@ -80,11 +74,36 @@
 </div>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 <script>
+
+    $( document ).ready(function() {
+        $("g.node").on("click", function() {
+            // Get the book ID from the ID
+            var bookIdSplit = String($(this).attr('id')).split("-")
+            var bookId = bookIdSplit[bookIdSplit.length - 1]
+
+            // Get the URL
+            var url = "/book/" + bookId;
+
+            $.ajax({
+                method: "GET",
+                url: url,
+            })
+            .done(function(data) {
+                // Display the data
+                console.log(data);
+            })
+            .fail(function() {
+                console.log("Failed to load book. I recognise my failing and will be sure to correct it");
+            });
+
+        });
+    });
+
     function searchCharacters(x){
         if(x.checked){
             $("#characterInput").show();

@@ -5,23 +5,19 @@ body {
 
 
 g.node[id*='main-book'] polygon {
-  fill: lightgrey;
-  stroke: lightgrey;
-  stroke-width: 3;
-  stroke-linejoin: round;
-}
-
-g.node[id*='recommended-book'] polygon {
   fill: white;
   stroke: white;
   stroke-width: 3;
   stroke-linejoin: round;
 }
 
-
-.text-box {
-    background: #f4ebd7;
+g.node[id*='recommended-book'] polygon {
+  fill: lightgrey;
+  stroke: lightgrey;
+  stroke-width: 3;
+  stroke-linejoin: round;
 }
+
 
 
 

@@ -61,6 +61,9 @@ class Book(models.Model):
     follows = models.ManyToManyField(to='Book')
     characters = models.ManyToManyField(to=Character)
 
+    author = models.TextField(null=True, blank=True)
+    blurb = models.TextField(null=True, blank=True)
+
     # If anthology it should contain stories?
 
     def __str__(self):

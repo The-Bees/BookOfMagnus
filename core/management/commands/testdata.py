@@ -35,7 +35,7 @@ class Command(BaseCommand):
                 for fbook in follows_list:
                     book.follows.add(Book.objects.get(title=fbook).id)
 
-        characters_df = pandas.read_excel('characters.xlsx')
+        characters_df = pandas.read_excel('main_characters.xlsx')
 
         # Add the characters
         for index, row in characters_df.iterrows():

@@ -6,6 +6,11 @@ from pygraphviz import *
 
 from core.models import Affiliation, Book, Character
 
+TYPE_MAP = {
+    Book.NOVEL: "box",
+    Book.NOVELLA: "parallelogram",
+    Book.ANTHOLOGY: "diamond"
+}
 
 @login_required()
 def index(request):
@@ -35,14 +40,14 @@ def index(request):
 
         # Draw all the nodes
         for book in books:
-            graph.add_node(book.id, id="main-book-{}".format(book.id), label=book.title)
+            graph.add_node(book.id, id="main-book-{}".format(book.id), label=book.title, shape=TYPE_MAP[book.type])
 
             if book.follows.exists():
                 for parent in book.follows.all():
                     graph.add_edge(parent.id, book.id)
 
         for book in prequels:
-            graph.add_node(book.id, id="recommended-book-{}".format(book.id), label=book.title)
+            graph.add_node(book.id, id="recommended-book-{}".format(book.id), label=book.title, shape=TYPE_MAP[book.type])
 
             if book.follows.exists():
                 for parent in book.follows.all():
@@ -53,7 +58,7 @@ def index(request):
         books = Book.objects.all()
 
         for book in books:
-            graph.add_node(book.id, id="main-book-{}".format(book.id), label=book.title)
+            graph.add_node(book.id, id="main-book-{}".format(book.id), label=book.title, shape=TYPE_MAP[book.type])
 
             if book.follows.exists():
                 for parent in book.follows.all():
@@ -61,7 +66,6 @@ def index(request):
 
     #graph.graph_attr["splines"] = "curved"
     graph.edge_attr["arrowhead"] = "open"
-    graph.node_attr["shape"] = "box"
     graph.layout(prog='dot')
     #print(graph.string())
     svg_graph = graph.draw(format="svg").decode("utf-8")
@@ -69,7 +73,8 @@ def index(request):
     context = {
         "svg": svg_graph,
         "characters": characters,
-        "affiliations": affiliations
+        "affiliations": affiliations,
+        "key": create_key()
     }
 
     return render(request, 'core/index.html', context)
@@ -97,3 +102,23 @@ def get_prequels(books):
     return prequels
 
 
+def create_key():
+    """
+    Create an SVG of the graph key
+    """
+
+    graph = AGraph(directed=True, bgcolor="transparent", size=6)
+
+    # Add all the shapes
+    for type, shape in TYPE_MAP.items():
+        graph.add_node(type, id="main-book-{}".format(type), label=type.lower(), shape=shape)
+
+    # Add main and recommended books
+    graph.add_node("main", id="main-book", label="Main reading", shape=TYPE_MAP[Book.NOVEL])
+    graph.add_node("recommended", id="recommended-book", label="Recommended reading", shape=TYPE_MAP[Book.NOVEL])
+
+    graph.layout(prog='dot')
+
+    svg_graph = graph.draw(format="svg").decode("utf-8")
+
+    return svg_graph

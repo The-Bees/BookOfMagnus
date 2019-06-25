@@ -22,7 +22,7 @@ class Command(BaseCommand):
         books_df = pandas.read_excel('books.xlsx')
 
         for index, row in books_df.iterrows():
-
+            print("Adding {}...".format(row['Title']))
             book = Book.objects.create(
                 title=row['Title'],
                 type=row['Format'].upper()

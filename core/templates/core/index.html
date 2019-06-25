@@ -16,12 +16,14 @@
 </head>
 <body>
 <div class="container-fluid">
-
+    <div class="row-fluid">
+        <div class="col">
+            <h1>Horus Heresy Reading Order</h1>
+        </div>
+    </div>
 
     <div class="row-fluid">
-        <div class="span4 m-3">
-            <h1>Horus Heresy Reading Order</h1>
-
+        <div class="col-4 m-3">
             <h5>Refine by:</h5>
 
             <form method="post">
@@ -64,10 +66,14 @@
                 <button class="btn btn-secondary" onclick="window.location.href='/'">Reset</button>
             </form>
         </div>
+
+        <div class="col m-3">
+            {{ key |safe }}
+        </div>
     </div>
 
     <div class="row-fluid">
-        <div class="span12">
+        <div class="col">
             {{ svg |safe }}
         </div>
     </div>

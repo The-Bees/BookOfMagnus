@@ -71,6 +71,27 @@
             {{ svg |safe }}
         </div>
     </div>
+
+    <!-- Book Info Modal -->
+    <div class="modal fade" id="bookInfoModal" tabindex="-1" role="dialog" aria-labelledby="bookInfoModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookInfoModalTitle">Book Information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6>Written by <span id="bookInfoModalAuthor"></span></h6>
+                    <p><span id="bookInfoModalType"></span></p>
+                    <h6>The story</h6>
+                    <p></p><span id="bookInfoModalBlurb"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -96,6 +117,13 @@
             .done(function(data) {
                 // Display the data
                 console.log(data);
+                $("#bookInfoModalTitle").text(data["title"]);
+                $("#bookInfoModalAuthor").text(data["author"]);
+                $("#bookInfoModalType").text(data["type"].toLowerCase());
+                $("#bookInfoModalBlurb").text(data["blurb"]);
+
+                $("#bookInfoModal").modal("show")
+
             })
             .fail(function() {
                 console.log("Failed to load book. I recognise my failing and will be sure to correct it");

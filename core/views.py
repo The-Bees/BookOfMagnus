@@ -7,9 +7,9 @@ from pygraphviz import *
 from core.models import Affiliation, Book, Character
 
 TYPE_MAP = {
-    Book.NOVEL: "box",
-    Book.NOVELLA: "parallelogram",
-    Book.ANTHOLOGY: "diamond"
+    Book.NOVEL: "rectangle",
+    Book.NOVELLA: "rectangle",
+    Book.ANTHOLOGY: "rectangle"
 }
 
 @login_required()
@@ -64,8 +64,11 @@ def index(request):
                 for parent in book.follows.all():
                     graph.add_edge(parent.id, book.id)
 
-    #graph.graph_attr["splines"] = "curved"
+    #graph.graph_attr["concentrate"] = "true"
     graph.edge_attr["arrowhead"] = "open"
+    # graph.node_attr["fixedsize"] = "true"
+    # graph.node_attr["width"] = "1"
+    # graph.node_attr["height"] = "0.5"
     graph.layout(prog='dot')
     #print(graph.string())
     svg_graph = graph.draw(format="svg").decode("utf-8")
@@ -73,8 +76,7 @@ def index(request):
     context = {
         "svg": svg_graph,
         "characters": characters,
-        "affiliations": affiliations,
-        "key": create_key()
+        "affiliations": affiliations
     }
 
     return render(request, 'core/index.html', context)

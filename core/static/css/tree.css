@@ -7,14 +7,14 @@ body {
 g.node[id*='main-book'] polygon {
   fill: white;
   stroke: white;
-  stroke-width: 6;
+
   stroke-linejoin: round;
 }
 
 g.node[id*='recommended-book'] polygon {
   fill: lightgrey;
   stroke: lightgrey;
-  stroke-width: 6;
+
   stroke-linejoin: round;
 }
 

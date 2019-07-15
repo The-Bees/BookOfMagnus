@@ -4,6 +4,11 @@ import xlrd
 from django.core.management.base import BaseCommand, CommandError
 from core.models import Book, Affiliation, Character
 
+# Temp data
+AUTHOR = "Lorgar Aurelian"
+SERIES_NO = 0
+BLURB = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
 
 class Command(BaseCommand):
     help = 'Adds test data to the db'
@@ -25,7 +30,11 @@ class Command(BaseCommand):
             print("Adding {}...".format(row['Title']))
             book = Book.objects.create(
                 title=row['Title'],
-                type=row['Format'].upper()
+                type=row['Format'].upper(),
+                #FIXME: temp data
+                author=AUTHOR,
+                series_no=SERIES_NO,
+                blurb=BLURB
             )
 
             # Add and books they follow on from
@@ -61,7 +70,7 @@ class Command(BaseCommand):
 
                         try:
                             book_obj = Book.objects.get(title=title)
-                            book_obj.characters.add(character.id)
+                            book_obj.primary_characters.add(character.id)
                         except:
                             # If book doesn't exist
                             pass

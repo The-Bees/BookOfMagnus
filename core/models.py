@@ -57,11 +57,12 @@ class Book(models.Model):
     )
 
     title = models.TextField(unique=True)
-    type = models.CharField(choices=TYPE_CHOICES, max_length=20)
-    follows = models.ManyToManyField(to='Book')
-    characters = models.ManyToManyField(to=Character)
-
     author = models.TextField(null=True, blank=True)
+    series_no = models.PositiveIntegerField()
+    type = models.CharField(choices=TYPE_CHOICES, max_length=20)
+    primary_characters = models.ManyToManyField(to=Character, related_name="primary_characters")
+    dramatis_personae = models.ManyToManyField(to=Character, related_name="dramatis_personae")
+    follows = models.ManyToManyField(to='Book')
     blurb = models.TextField(null=True, blank=True)
 
     # If anthology it should contain stories?

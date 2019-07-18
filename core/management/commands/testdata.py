@@ -56,10 +56,8 @@ class Command(BaseCommand):
                 character = Character.objects.create(
                     name=row["Name"],
                     type=row["Type"].upper(),
-
+                    affiliation=affiliation
                 )
-
-                character.affiliation.add(affiliation.id)
 
                 # Add them to any books they're in
                 if type(row['Books']) == str:

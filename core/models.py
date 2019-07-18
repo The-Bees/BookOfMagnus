@@ -32,7 +32,7 @@ class Character(models.Model):
 
     name = models.TextField(unique=True)
     type = models.CharField(choices=TYPE_CHOICES, max_length=20)
-    affiliation = models.ManyToManyField(to=Affiliation)
+    affiliation = models.ForeignKey(Affiliation, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
